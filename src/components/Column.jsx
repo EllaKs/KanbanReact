@@ -1,56 +1,21 @@
 import React, { Component } from "react";
 import Card from "./Card";
-//import { cards } from "../lists/listOfCards";
+import { cardsList } from "../lists/listOfCards";
 
 class Column extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cards: [
-        {
-          id: 9461,
-          customerName: "Kanban board",
-          content: "Lägg till allvarlighetsgrad på kort",
-          columnIndex: 0,
-          owner: "EK",
-          prio: "high"
-        },
-        {
-          id: 9127,
-          customerName: "Kanban board",
-          content: "Lägg till titel på kort",
-          columnIndex: 2,
-          owner: "EK",
-          prio: "low"
-        },
-        {
-          id: 9137,
-          customerName: "Kanban board",
-          content: "Skapa knapp för 'Klar' och 'Ingen åtgärd'",
-          columnIndex: 4,
-          owner: "EK",
-          prio: "medium"
-        },
-        {
-          id: 9634,
-          customerName: "Kanban board",
-          content: "Importera DND",
-          columnIndex: 1,
-          owner: "EK",
-          prio: "medium"
-        },
-        {
-          id: 9655,
-          customerName: "MeMyselfAndI",
-          content: "Drick kaffe",
-          columnIndex: 3,
-          owner: "EK",
-          prio: "high"
-        }
-      ]
+      isOver: false,
+      cards: []
     };
   }
 
+  componentDidMount() {
+    this.setState({
+      cards: cardsList
+    });
+  }
   // componentDidMount() {
   //   this.fillCardArray();
   //   console.log("Did", this.state.cardArray);
@@ -65,11 +30,26 @@ class Column extends Component {
   //   }));
   // }
 
-  onDragOver(e, columnId) {
-    e.preventDefault(); //Preventing default action of elem to happen. Ex submit button to submit a form.
+  onDragOver(e) {
+    e.preventDefault(); //Preventing default action of elem to happen. Ex submit button to submit a form.'
+
+    this.setState({
+      isOver: true
+    });
+  }
+
+  onDragLeave(e) {
+    e.preventDefault();
+    this.setState({
+      isOver: false
+    });
   }
 
   onDrop(e, columnId) {
+    this.setState({
+      isOver: false
+    });
+
     let cardId = e.dataTransfer.getData("text/plain");
 
     console.log("cardId:", cardId, " dropped at:", columnId);
@@ -94,17 +74,17 @@ class Column extends Component {
   }
 
   render() {
-    // const {connectDropTarget, isOver, card} = this.props;
-    // const backgroundColor = isOver ? "grey" : ""
+    const backgroundColor = this.state.isOver ? "grey" : "";
 
-    const { columnId, column } = this.props;
+    const { columnId } = this.props;
 
     return (
-      // <div className="column" style={{backgroundColor}}>
       <div
         className="column"
         onDragOver={e => this.onDragOver(e, columnId)}
+        onDragLeave={e => this.onDragLeave(e)}
         onDrop={e => this.onDrop(e, columnId)}
+        style={{ backgroundColor }}
       >
         <div id="head">
           <div id="title">{this.props.column.name}</div>

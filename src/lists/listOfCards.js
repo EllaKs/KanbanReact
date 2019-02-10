@@ -1,4 +1,4 @@
-export const cards = [
+export const cardsList = [
   {
     id: 9461,
     customerName: "Kanban board",

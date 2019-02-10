@@ -33,12 +33,3 @@ class Card extends Component {
 }
 
 export default Card;
-
-/*{id: 9461,
-   customerName: "Kanban board",
-    content: "Improve column layout",
-     columnIndex: 2,
-      owner: "EK",
-       prio: "high" }
-       
-       */
