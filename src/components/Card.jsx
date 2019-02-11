@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
 class Card extends Component {
-  onDragStart(e, cardId) {
-    e.dataTransfer.setData("text/plain", cardId);
+  onDragStart(e, cardId, columnIndex) {
+    e.dataTransfer.setData("text/plain", cardId, columnIndex);
   }
 
   render() {
@@ -12,7 +12,7 @@ class Card extends Component {
         className="card"
         draggable
         key={cardId}
-        onDragStart={e => this.onDragStart(e, card.id)}
+        onDragStart={e => this.onDragStart(e, card.id, card.columnIndex)}
       >
         {/* <div>{cardId}</div>
         <div>{card.customerName}</div>
@@ -24,8 +24,9 @@ class Card extends Component {
           <div style={{ fontWeight: 600 }}>{cardId}</div>
           <div>{card.customerName}</div>
           <div>{card.content}</div>
-          <div>{card.prio}</div>
+          <div>Priority: {card.priority}</div>
           <div>{card.owner}</div>
+          <div>Column: {card.columnIndex}</div>
         </div>
       </div>
     );

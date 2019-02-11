@@ -5,7 +5,7 @@ export const cardsList = [
     content: "Lägg till allvarlighetsgrad på kort",
     columnIndex: 0,
     owner: "EK",
-    prio: "high"
+    priority: 1
   },
   {
     id: 9127,
@@ -13,7 +13,7 @@ export const cardsList = [
     content: "Lägg till titel på kort",
     columnIndex: 2,
     owner: "EK",
-    prio: "low"
+    priority: 3
   },
   {
     id: 9137,
@@ -21,7 +21,7 @@ export const cardsList = [
     content: "Skapa knapp för 'Klar' och 'Ingen åtgärd'",
     columnIndex: 4,
     owner: "EK",
-    prio: "medium"
+    priority: 2
   },
   {
     id: 9634,
@@ -29,7 +29,7 @@ export const cardsList = [
     content: "Importera DND",
     columnIndex: 1,
     owner: "EK",
-    prio: "medium"
+    priority: 2
   },
   {
     id: 9655,
@@ -37,6 +37,6 @@ export const cardsList = [
     content: "Drick kaffe",
     columnIndex: 3,
     owner: "EK",
-    prio: "high"
+    priority: 2
   }
 ];

@@ -1,19 +1,17 @@
 import React, { Component } from "react";
 import "./App.css";
 import Board from './components/Board'
-import Menu from './components/Menu'
 
-class App extends Component{
+class App extends Component {
   render() {
-        return (
+    return (
       <div className="app">
-      <Menu/>
-      <Board />
+        <Board />
       </div>
     );
   }
 }
- 
+
 export default App;
 
 
