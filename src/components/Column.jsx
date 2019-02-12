@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Card from "./Card";
 import { cardsList } from "../lists/listOfCards";
 import { columnList } from "../lists/listOfColumns";
+import "../styles/column.scss"
 
 class Column extends Component {
   constructor(props) {
@@ -34,76 +35,43 @@ class Column extends Component {
     let dto = e.dataTransfer.getData("text/plain");
     const cardId = parseInt(dto);
     this.updateColumnState(cardId, columnId);
-    // this.increaseCardQuantity(columnId);
   }
 
-  // updateColumnState(cardId, columnId) {
-  //   var prevColumnId = 0;
-  //   var updatedCards = [...this.state.cards];
-  //   var index = this.state.cards.findIndex(card => card.id === cardId)
-  //   prevColumnId = updatedCards[index].columnIndex
-  //   updatedCards[index].columnIndex = columnId;
-  //   this.setState({ cards: updatedCards })
-  //   console.log("Updated cards", this.state.cards);
-  //   this.cardCounter();
+  updateColumnState(cardId, columnId) {
+    var prevColumnId = 0;
+    var updatedCards = [...this.state.cards];
+    var index = this.state.cards.findIndex(card => card.id === cardId)
+    prevColumnId = updatedCards[index].columnIndex
+    updatedCards[index].columnIndex = columnId;
 
-  //   // this.decreaseCardQuantity(prevColumnId);
-  // }
-
-  // increaseCardQuantity(columnId) {
-  //   var updatedColumns = [...this.state.columns];
-  //   var index = this.state.columns.findIndex(col => col.id === columnId)
-  //   updatedColumns[index].quantityOfCards += 1;
-
-  //   this.setState({ columns: updatedColumns })
-  //   console.log("incr", updatedColumns[index].quantityOfCards);
-  // }
-
-  // decreaseCardQuantity(columnId) {
-  //   var updatedColumns = [...this.state.columns];
-  //   var index = this.state.columns.findIndex(col => col.id === columnId)
-  //   updatedColumns[index].quantityOfCards -= 1;
-
-  //   this.setState({ columns: updatedColumns })
-  //   console.log("decr", updatedColumns[index].quantityOfCards);
-  // }
-
-  cardCounter() {
-    const { cards, columns } = this.state;
-    console.log("cardcounter!")
-
-    for (var i = 0; i < cards.length; i++) {
-      for (var y = 0; y < columns.length; y++) {
-        if (cards[i].columnIndex === columns[y].id)
-          console.log("träff")
-        columns[y].quantityOfCards += 1;
-        console.log(columns[y].quantityOfCards)
-      }
+    if (prevColumnId !== columnId) {
+      this.setState({ cards: updatedCards })
+      console.log("Updated cards", this.state.cards);
+      this.increaseCardQuantity(columnId);
+      this.decreaseCardQuantity(prevColumnId);
     }
+  }
 
-    // console.log("cardcounter!")
-    // this.state.columns.forEach(col => {
-    //   this.state.cards.forEach(card => {
-    //     if (card.columnIndex === col.id) {
-    //       col.quantityOfCards++
-    //     }
-    //   });
-    // });
+  increaseCardQuantity(newColumnId) {
+    var updatedColumns = [...this.state.columns];
+    var index = this.state.columns.findIndex(col => col.id === newColumnId)
+    updatedColumns[index].quantityOfCards += 1;
 
+    this.setState({ columns: updatedColumns })
+  }
 
-    // var updatedColumns = [...this.state.columns];
-    // var index = this.state.columns.findIndex(col => col.id === columnId)
-    // updatedColumns[index].quantityOfCards += 1;
+  decreaseCardQuantity(prevColumnId) {
+    var updatedColumns = [...this.state.columns];
+    var index = this.state.columns.findIndex(col => col.id === prevColumnId)
+    updatedColumns[index].quantityOfCards -= 1;
 
-    // // this.setState({ columns: updatedColumns })
-    // console.log("count", updatedColumns[index].quantityOfCards);
+    this.setState({ columns: updatedColumns })
   }
 
   render() {
-    const backgroundColor = this.state.isOver ? "#aaafb3" : "";
+    const backgroundColor = this.state.isOver ? "#dce4ef" : "";
     const { columnId } = this.props;
 
-    console.log("column", columnId)
     if (columnId < 5) {
       return (
         <div
@@ -114,12 +82,13 @@ class Column extends Component {
           style={{ backgroundColor }}
         >
           <div id="head">
-            <span id="title">{this.props.column.name} {this.props.column.quantityOfCards}</span>
+            <div id="title">{this.props.column.name}&emsp;&emsp; <span id="quantity">{this.props.column.quantityOfCards}</span></div>
           </div>
           <div id="body">
             <hr />
-            {this.state.cards.map(card => {
-              if (columnId === card.columnIndex) {
+            {this.state.cards
+              .filter(card => card.columnIndex === columnId)
+              .map(card => {
                 return (
                   <Card
                     key={card.id}
@@ -129,14 +98,14 @@ class Column extends Component {
                   />
                 );
               }
-            })}
+              )}
           </div>
         </div>
 
       );
     }
     else {
-      const backgroundColor = this.state.isOver ? "#aaafb3" : "";
+      const backgroundColor = this.state.isOver ? "#dce4ef" : "";
       return (
         <div
           id={columnId === 5 ? 'noaction' : 'done'}

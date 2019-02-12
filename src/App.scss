@@ -1,0 +1,50 @@
+:root {
+  --main--color: #a5d6f5;
+  --secondary-color: #ffffff;
+  --main-title-color: rgb(98, 109, 255);
+  --main-column-color: #dcf1ff;
+  --secondary-column-color: #363a3b;
+  --main-text-color: #444647;
+  --main-card-color: #f4faff;
+  --secondary-card-color: #77b9e6;
+  --head-column-done: rgb(139, 194, 139);
+  --head-column-noaction: rgb(243, 216, 140);
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI VSS (Regular)", "Segoe UI";
+}
+
+#root {
+  height: 100%;
+}
+
+.board {
+  display: grid;
+  height: 100%;
+  grid-template-columns: (6, 1fr); /*(6, 1fr); Repeats 6 columns * 1 fraction*/
+  grid-template-rows: 1fr 530px 1fr 1fr 1fr 1fr; /* 6 rows and the last one is set to 40px */
+  grid-template-areas:
+    "t t t t t t"
+    "b b b b b b"
+    "b b b b b b"
+    "b b b b b b"
+    "b b b b b b"
+    "b b b b b b";
+}
+
+#top {
+  grid-area: t;
+}
+
+#bottom {
+  grid-area: b;
+}
+
+.board {
+  display: grid;
+}
