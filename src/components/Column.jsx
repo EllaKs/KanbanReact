@@ -8,19 +8,10 @@ class Column extends Component {
     super(props);
     this.state = {
       isOver: false,
-      cards: [],
-      columns: []
-    };
-  }
-
-  componentDidMount() {
-    this.setState({
       cards: cardsList,
       columns: columnList
-    });
-    this.cardCounter();
+    };
   }
-
 
   onDragOver(e) {
     e.preventDefault(); //Preventing default action of elem to happen. Ex submit button to submit a form.'
@@ -46,18 +37,18 @@ class Column extends Component {
     // this.increaseCardQuantity(columnId);
   }
 
-  updateColumnState(cardId, columnId) {
-    var prevColumnId = 0;
-    var updatedCards = [...this.state.cards];
-    var index = this.state.cards.findIndex(card => card.id === cardId)
-    prevColumnId = updatedCards[index].columnIndex
-    updatedCards[index].columnIndex = columnId;
-    this.setState({ cards: updatedCards })
-    console.log("Updated cards", this.state.cards);
-    this.cardCounter();
+  // updateColumnState(cardId, columnId) {
+  //   var prevColumnId = 0;
+  //   var updatedCards = [...this.state.cards];
+  //   var index = this.state.cards.findIndex(card => card.id === cardId)
+  //   prevColumnId = updatedCards[index].columnIndex
+  //   updatedCards[index].columnIndex = columnId;
+  //   this.setState({ cards: updatedCards })
+  //   console.log("Updated cards", this.state.cards);
+  //   this.cardCounter();
 
-    // this.decreaseCardQuantity(prevColumnId);
-  }
+  //   // this.decreaseCardQuantity(prevColumnId);
+  // }
 
   // increaseCardQuantity(columnId) {
   //   var updatedColumns = [...this.state.columns];
@@ -89,6 +80,7 @@ class Column extends Component {
         console.log(columns[y].quantityOfCards)
       }
     }
+
     // console.log("cardcounter!")
     // this.state.columns.forEach(col => {
     //   this.state.cards.forEach(card => {
