@@ -4,10 +4,12 @@
     border: 1px rgb(187, 186, 186) solid;
     border-radius: 8px;
     flex-grow: 1;
-    margin: 1rem;
+    margin: 0.7rem;
     max-width: 100%;
     min-width: 15rem;
+    max-height: 800px;
     padding: 5px;
+    overflow-y: hidden;
   }
   
   #head {

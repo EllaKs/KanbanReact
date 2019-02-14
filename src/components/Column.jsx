@@ -57,9 +57,10 @@ class Column extends Component {
   }
 
   render() {
-    const backgroundColor = this.state.isOver ? "#dce4ef" : "";
     const { columnId, column, filterNames } = this.props;
     const { cards } = this.state;
+    const backgroundColor = this.state.isOver ? "#dce4ef" : "";
+    const overflowY = column.quantityOfCards >= 6 ? "scroll" : "hidden";
 
     if (columnId < 5) {
       if (filterNames === "Show all") {
@@ -69,7 +70,7 @@ class Column extends Component {
             onDragOver={e => this.onDragOver(e, columnId)}
             onDragLeave={e => this.onDragLeave(e)}
             onDrop={e => this.onDrop(e, columnId)}
-            style={{ backgroundColor }}
+            style={{ backgroundColor, overflowY }}
           >
             <div id="head">
               <div id="title">{column.name}&emsp;&emsp; <span id="quantity">{column.quantityOfCards}</span></div>
@@ -98,7 +99,7 @@ class Column extends Component {
             onDragOver={e => this.onDragOver(e, columnId)}
             onDragLeave={e => this.onDragLeave(e)}
             onDrop={e => this.onDrop(e, columnId)}
-            style={{ backgroundColor }}
+            style={{ backgroundColor, overflowY }}
           >
             <div id="head">
               <div id="title">{column.name}&emsp;&emsp; <span id="quantity">{column.quantityOfCards}</span></div>
