@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 import Column from "./Column";
 import Filter from './Filter';
-import Search from './Search'
 import { columnList } from "../lists/listOfColumns";
 import { cardsList } from '../lists/listOfCards';
 import "../styles/board.scss"
@@ -27,7 +26,6 @@ class Board extends Component {
 
   getDistinctCustomerNames() {
     const { cards } = this.state;
-
     let namesArray = [...new Set(cards.map(c => c.customerName))];
 
     this.setState({
@@ -39,28 +37,37 @@ class Board extends Component {
     this.setState({
       selectedFilterValue: names
     })
+    this.cardCounter(names)
   }
 
-  cardCounter() {
+  cardCounter(filterNames) {
     const { cards, columns } = this.state;
-
     let updatedColumns = [];
 
     columns.forEach(col => {
       col.quantityOfCards = 0
     });
 
-    for (var i = 0; i < cards.length; i++) {
-      updatedColumns = columns.filter(col => {
-        if (col.id === cards[i].columnIndex) {
-          console.log("test", col.id, cards[i].columnIndex)
-          col.quantityOfCards += 1;
-        }
-        console.log("updatedCol", updatedColumns)
-        return updatedColumns;
-      });
+    if (filterNames === undefined || filterNames === "Show all") {
+      for (var i = 0; i < cards.length; i++) {
+        updatedColumns = columns.filter(col => {
+          if (col.id === cards[i].columnIndex) {
+            col.quantityOfCards += 1;
+          }
+          return updatedColumns;
+        });
+      }
     }
-
+    else {
+      for (var y = 0; y < cards.length; y++) {
+        updatedColumns = columns.filter(col => {
+          if (col.id === cards[y].columnIndex && cards[y].customerName === filterNames) {
+            col.quantityOfCards += 1;
+          }
+          return updatedColumns;
+        });
+      }
+    }
     this.setState({
       columns: updatedColumns
     });
@@ -72,17 +79,16 @@ class Board extends Component {
       <div className="board">
         <div id="top">
           <h1>Kanban Board</h1>
-          <div>
-            <Search />
+          <div id="filter">
             <Filter distinctNames={distinctNames} onSelectedFilter={this.handleFilter} />
           </div>
 
-          <div>
+          <div id="top-columns">
             {columns
               .filter(column => column.id >= columns.length - 2)
               .map(column => {
                 return (
-                  <Column column={column} columnId={column.id} key={column.id} filterNames={selectedFilterValue} />
+                  <Column column={column} columnId={column.id} key={column.id} filterNames={selectedFilterValue} cardCounter={this.cardCounter} />
                 )
               }
               )}

@@ -17,7 +17,7 @@ class Filter extends Component {
     }
 
     handleChange() {
-        var names = document.getElementById("selectedName").value;
+        var names = document.getElementById("select").value;
         this.props.onSelectedFilter(names);
     }
 
@@ -25,8 +25,8 @@ class Filter extends Component {
         const { distinctNames } = this.props;
 
         return (
-            <div>
-                <select id="selectedName" onChange={this.handleChange}>
+            <div id="dropdown">
+                <select id="select" onChange={this.handleChange}>
                     <option value="Show all">Visa alla</option>
                     {distinctNames
                         .map(name => {

@@ -1,22 +1,33 @@
 .board{ 
-    h1 {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-     float: left;
-     margin: 10px;
-     font-size: 3rem;
-     padding-left: 18px;
-     color: var(--main-title-color);
-   }
-}
   #top{
-     background-color: var(--main--color);
-   }
-   
-   #bottom{
-     background-color: var(--secondary-color);
-     display: flex;
-   }
+    background-color: var(--main--color);
+    display: flex;
 
-   #filter{
-     padding-left: 30px;
-   }
+    h1 {
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+       float: left;
+       margin: 10px;
+       font-size: 3rem;
+       padding: 0 3rem 0 3rem;
+       color: var(--main-title-color);
+     }
+  
+     #filter{
+      padding: 1rem 7rem;
+      }
+  
+      #top-columns{
+        padding: 0 7rem;
+      }
+  }
+
+  #bottom{
+    background-color: var(--secondary-color);
+    display: flex;
+  }
+}
+
+   
+
+
+ 
