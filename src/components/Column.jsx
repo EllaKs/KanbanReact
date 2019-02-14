@@ -12,6 +12,12 @@ class Column extends Component {
       cards: cardsList,
       columns: columnList
     };
+    this.updateCardCounter = this.updateCardCounter.bind(this)
+  }
+
+  updateCardCounter() {
+    console.log("updateCounter")
+    this.props.cardCounter();
   }
 
   onDragOver(e) {
@@ -35,6 +41,7 @@ class Column extends Component {
     let dto = e.dataTransfer.getData("text/plain");
     const cardId = parseInt(dto);
     this.updateColumnState(cardId, columnId);
+    this.updateCardCounter(columnId);
   }
 
   updateColumnState(cardId, columnId) {
@@ -46,64 +53,76 @@ class Column extends Component {
 
     if (prevColumnId !== columnId) {
       this.setState({ cards: updatedCards })
-      console.log("Updated cards", this.state.cards);
-      this.increaseCardQuantity(columnId);
-      this.decreaseCardQuantity(prevColumnId);
     }
-  }
-
-  increaseCardQuantity(newColumnId) {
-    var updatedColumns = [...this.state.columns];
-    var index = this.state.columns.findIndex(col => col.id === newColumnId)
-    updatedColumns[index].quantityOfCards += 1;
-
-    this.setState({ columns: updatedColumns })
-  }
-
-  decreaseCardQuantity(prevColumnId) {
-    var updatedColumns = [...this.state.columns];
-    var index = this.state.columns.findIndex(col => col.id === prevColumnId)
-    updatedColumns[index].quantityOfCards -= 1;
-
-    this.setState({ columns: updatedColumns })
   }
 
   render() {
     const backgroundColor = this.state.isOver ? "#dce4ef" : "";
-    const { columnId } = this.props;
+    const { columnId, column, filterNames } = this.props;
+    const { cards } = this.state;
 
     if (columnId < 5) {
-      return (
-        <div
-          className="column"
-          onDragOver={e => this.onDragOver(e, columnId)}
-          onDragLeave={e => this.onDragLeave(e)}
-          onDrop={e => this.onDrop(e, columnId)}
-          style={{ backgroundColor }}
-        >
-          <div id="head">
-            <div id="title">{this.props.column.name}&emsp;&emsp; <span id="quantity">{this.props.column.quantityOfCards}</span></div>
+      if (filterNames === "Show all") {
+        return (
+          <div
+            className="column"
+            onDragOver={e => this.onDragOver(e, columnId)}
+            onDragLeave={e => this.onDragLeave(e)}
+            onDrop={e => this.onDrop(e, columnId)}
+            style={{ backgroundColor }}
+          >
+            <div id="head">
+              <div id="title">{column.name}&emsp;&emsp; <span id="quantity">{column.quantityOfCards}</span></div>
+            </div>
+            <div id="body">
+              <hr />
+              {cards.filter(card => card.columnIndex === columnId)
+                .map(card => {
+                  return (
+                    <Card
+                      key={card.id}
+                      card={card}
+                      cardId={card.id}
+                      columnIndex={card.columnIndex}
+                      updateCardCounter={this.updateCardCounter}
+                    />
+                  );
+                })}
+            </div>
           </div>
-          <div id="body">
-            <hr />
-            {this.state.cards
-              .filter(card => card.columnIndex === columnId)
-              .map(card => {
-                return (
-                  <Card
-                    key={card.id}
-                    card={card}
-                    cardId={card.id}
-                    columnIndex={card.columnIndex}
-                  />
-                );
-              }
-              )}
+        );
+      } else {
+        return (
+          <div
+            className="column"
+            onDragOver={e => this.onDragOver(e, columnId)}
+            onDragLeave={e => this.onDragLeave(e)}
+            onDrop={e => this.onDrop(e, columnId)}
+            style={{ backgroundColor }}
+          >
+            <div id="head">
+              <div id="title">{column.name}&emsp;&emsp; <span id="quantity">{column.quantityOfCards}</span></div>
+            </div>
+            <div id="body">
+              <hr />
+              {cards.filter(card => card.customerName === filterNames && card.columnIndex === columnId)
+                .map(card => {
+                  return (
+                    <Card
+                      key={card.id}
+                      card={card}
+                      cardId={card.id}
+                      columnIndex={card.columnIndex}
+                      updateCardCounter={this.updateCardCounter}
+                    />
+                  );
+                })}
+            </div>
           </div>
-        </div>
-
-      );
+        );
+      }
     }
+
     else {
       const backgroundColor = this.state.isOver ? "#dce4ef" : "";
       return (
@@ -113,7 +132,7 @@ class Column extends Component {
           onDragLeave={e => this.onDragLeave(e)}
           onDrop={e => this.onDrop(e, columnId)}
           style={{ backgroundColor }}
-        >{this.props.column.name}</div>
+        >{column.name}</div>
       )
     }
   }
