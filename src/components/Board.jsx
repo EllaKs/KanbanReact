@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import Column from "./Column";
 import Filter from './Filter';
+import Search from './Search'
 import { columnList } from "../lists/listOfColumns";
 import { cardsList } from '../lists/listOfCards';
 import "../styles/board.scss"
@@ -13,10 +14,12 @@ class Board extends Component {
       columns: columnList,
       cards: cardsList,
       distinctNames: [],
-      selectedFilterValue: "Show all"
+      selectedFilterValue: "Show all",
+      searchValue: ""
     }
     this.handleFilter = this.handleFilter.bind(this)
     this.cardCounter = this.cardCounter.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
   }
 
   componentDidMount() {
@@ -38,6 +41,12 @@ class Board extends Component {
       selectedFilterValue: names
     })
     this.cardCounter(names)
+  }
+
+  handleSearch(value) {
+    this.setState({
+      searchValue: value
+    })
   }
 
   cardCounter(filterNames) {
@@ -79,6 +88,9 @@ class Board extends Component {
       <div className="board">
         <div id="top">
           <h1>Kanban Board</h1>
+          <div id="search">
+            <Search updateSearchValue={this.handleSearch} />
+          </div>
           <div id="filter">
             <Filter distinctNames={distinctNames} onSelectedFilter={this.handleFilter} />
           </div>
@@ -98,7 +110,14 @@ class Board extends Component {
         <div id="bottom">
           {columns.slice(0, 5).map(column => {
             return (
-              <Column column={column} columnId={column.id} key={column.id} cardCounter={this.cardCounter} quantityOfCards={column.quantityOfCards} filterNames={selectedFilterValue} />
+              <Column
+                column={column}
+                columnId={column.id}
+                key={column.id}
+                cardCounter={this.cardCounter}
+                quantityOfCards={column.quantityOfCards}
+                filterNames={selectedFilterValue}
+                searchValue={this.state.searchValue} />
             )
           }
           )}

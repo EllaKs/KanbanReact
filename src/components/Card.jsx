@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "../styles/card.scss"
 
 class Card extends Component {
+
   getInitials(owner) {
     var fullName = owner.split(' '),
       initials = fullName[0].substring(0, 1).toUpperCase();
@@ -41,12 +42,16 @@ class Card extends Component {
 
   onDragStart(e, cardId) {
     e.dataTransfer.setData("text/plain", cardId);
+    this.setState({
+      isDragged: true
+    })
   }
 
   render() {
     const { cardId, card } = this.props;
     let initials = this.getInitials(card.owner)
     let backgroundColor = this.getPrioColor(card.priority)
+
     let avatar = typeof card.userPhoto !== 'undefined' ? <img id="userphoto" alt="userphoto" src={card.userPhoto} /> : <div id="initials">{initials}</div>
     return (
       <div

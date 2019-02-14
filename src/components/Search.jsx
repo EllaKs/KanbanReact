@@ -1,23 +1,31 @@
 import React, { Component } from 'react'
-import { cardsList } from '../lists/listOfCards'
-import "../styles/filter.scss"
+import "../styles/search.scss"
 
 class Search extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
-            cards: cardsList
+            searchValue: ""
         }
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    getAllNames() {
-
+    handleChange(event) {
+        this.setState({
+            searchValue: event.target.value
+        });
+        this.props.updateSearchValue(this.state.searchValue);
     }
 
     render() {
         return (
-            <div>
-                {/* <input placeholder="Sök..." /> */}
+            <div >
+                <input
+                    type="text"
+                    id="search"
+                    value={this.state.searchValue}
+                    placeholder="Sök..."
+                    onChange={this.handleChange} />
             </div>
         )
     }

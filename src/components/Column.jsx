@@ -10,13 +10,61 @@ class Column extends Component {
     this.state = {
       isOver: false,
       cards: cardsList,
-      columns: columnList
+      columns: columnList,
+      searchFilter: ""
     };
     this.updateCardCounter = this.updateCardCounter.bind(this)
+    this.handleFilterChange = this.handleFilterChange.bind(this)
+  }
+
+  componentDidMount() {
+    this.setState({
+      searchFilter: this.props.searchValue
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      searchFilter: nextProps.searchValue
+    });
+
+    if (this.state.searchFilter !== "") {
+      this.handleFilterChange();
+    }
+  }
+
+  handleFilterChange() {
+    let updatedCardList = []
+    if (this.state.searchFilter !== "" && this.state.searchFilter !== undefined) {
+      updatedCardList = this.state.cards.filter(card => {
+        const custName = card.customerName.toLowerCase();
+        const content = card.content.toLowerCase();
+        const owner = card.owner.toLowerCase();
+        const filter = this.state.searchFilter.toLowerCase();
+        // console.log("Filter:", filter)
+        // console.log("Name", custName)
+
+        if (custName.includes(filter) || content.includes(filter) || owner.includes(filter)) {
+          console.log("found you", card.id)
+          updatedCardList.push(card)
+        }
+        // if (custName === filter) { //Input kanbanbräde...
+        //   console.log("found you")
+        //   updatedCardList.push(card)
+        // }
+        return updatedCardList
+      })
+    }
+    else {
+      return
+    }
+
+    this.setState({
+      cards: updatedCardList
+    });
   }
 
   updateCardCounter() {
-    console.log("updateCounter")
     this.props.cardCounter();
   }
 
