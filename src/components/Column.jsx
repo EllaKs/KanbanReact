@@ -11,63 +11,103 @@ class Column extends Component {
       isOver: false,
       cards: cardsList,
       columns: columnList,
-      searchFilter: ""
+      searchValue: "",
+      filterValue: "",
+      filteredCardsList: []
     };
     this.updateCardCounter = this.updateCardCounter.bind(this)
     this.handleFilterChange = this.handleFilterChange.bind(this)
   }
 
   componentDidMount() {
-    this.setState({
-      searchFilter: this.props.searchValue
-    });
+    this.handleFilterChange();
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      searchFilter: nextProps.searchValue
-    });
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.filterValue !== prevState.filterValue || nextProps.searchValue !== prevState.searchValue) {
+      return { searchValue: nextProps.searchValue, filterValue: nextProps.filterValue };
+    }
+    else return null;
+  }
 
-    if (this.state.searchFilter !== "") {
-      this.handleFilterChange();
+  componentDidUpdate(prevProps) {
+    if (prevProps.filterValue !== this.props.filterValue || prevProps.searchValue !== this.props.searchValue) {
+      this.setState({ filterValue: this.props.filterValue });
+      this.setState({ searchValue: this.props.searchValue });
+      this.handleFilterChange(this.state.searchValue, this.state.filterValue);
     }
   }
 
-  handleFilterChange() {
-    let updatedCardList = []
-    if (this.state.searchFilter !== "" && this.state.searchFilter !== undefined) {
-      updatedCardList = this.state.cards.filter(card => {
-        const custName = card.customerName.toLowerCase();
-        const content = card.content.toLowerCase();
-        const owner = card.owner.toLowerCase();
-        const filter = this.state.searchFilter.toLowerCase();
-        // console.log("Filter:", filter)
-        // console.log("Name", custName)
+  handleFilterChange(searchValue, filterValue) {
+    const { cards } = this.state;
+    this.setState({
+      filteredCardsList: cards
+    })
 
-        if (custName.includes(filter) || content.includes(filter) || owner.includes(filter)) {
-          console.log("found you", card.id)
-          updatedCardList.push(card)
-        }
-        // if (custName === filter) { //Input kanbanbräde...
-        //   console.log("found you")
-        //   updatedCardList.push(card)
-        // }
-        return updatedCardList
+    if (searchValue === undefined && filterValue === undefined) {
+      this.setState({
+        filteredCardsList: cards
       })
     }
     else {
-      return
-    }
+      let updatedCardsList = []
+      if (searchValue !== "" && searchValue !== undefined) {
+        this.setState({
+          filteredCardsList: []
+        })
 
-    this.setState({
-      cards: updatedCardList
-    });
+        this.state.cards.filter(card => {
+          const custName = card.customerName.toLowerCase();
+          const content = card.content.toLowerCase();
+          const owner = card.owner.toLowerCase();
+          const filter = searchValue.toLowerCase();
+
+          if (custName.includes(filter) || content.includes(filter) || owner.includes(filter)) {
+            updatedCardsList.push(card)
+          }
+          return updatedCardsList
+        })
+
+        this.setState({
+          filteredCardsList: updatedCardsList
+        })
+      }
+      if (filterValue !== "" && filterValue !== undefined) {
+        this.setState({
+          filteredCardsList: []
+        })
+
+        this.state.cards.filter(card => {
+          if (card.customerName === filterValue) {
+            updatedCardsList.push(card)
+          }
+          return updatedCardsList
+        })
+
+        this.setState({
+          filteredCardsList: updatedCardsList
+        })
+      }
+    }
   }
 
   updateCardCounter() {
     this.props.cardCounter();
   }
 
+  updateColumnState(cardId, columnId) {
+    var prevColumnId = 0;
+    var updatedCards = [...this.state.cards];
+    var index = this.state.cards.findIndex(card => card.id === cardId)
+    prevColumnId = updatedCards[index].columnIndex
+    updatedCards[index].columnIndex = columnId;
+
+    if (prevColumnId !== columnId) {
+      this.setState({ cards: updatedCards })
+    }
+  }
+
+  /* Drag and Drop */
   onDragOver(e) {
     e.preventDefault(); //Preventing default action of elem to happen. Ex submit button to submit a form.'
     this.setState({
@@ -92,86 +132,42 @@ class Column extends Component {
     this.updateCardCounter(columnId);
   }
 
-  updateColumnState(cardId, columnId) {
-    var prevColumnId = 0;
-    var updatedCards = [...this.state.cards];
-    var index = this.state.cards.findIndex(card => card.id === cardId)
-    prevColumnId = updatedCards[index].columnIndex
-    updatedCards[index].columnIndex = columnId;
-
-    if (prevColumnId !== columnId) {
-      this.setState({ cards: updatedCards })
-    }
-  }
-
   render() {
-    const { columnId, column, filterNames } = this.props;
-    const { cards } = this.state;
+    const { columnId, column } = this.props;
+    const { filteredCardsList } = this.state;
     const backgroundColor = this.state.isOver ? "#dce4ef" : "";
     const overflowY = column.quantityOfCards >= 6 ? "scroll" : "hidden";
 
     if (columnId < 5) {
-      if (filterNames === "Show all") {
-        return (
-          <div
-            className="column"
-            onDragOver={e => this.onDragOver(e, columnId)}
-            onDragLeave={e => this.onDragLeave(e)}
-            onDrop={e => this.onDrop(e, columnId)}
-            style={{ backgroundColor, overflowY }}
-          >
-            <div id="head">
-              <div id="title">{column.name}&emsp;&emsp; <span id="quantity">{column.quantityOfCards}</span></div>
-            </div>
-            <div id="body">
-              <hr />
-              {cards.filter(card => card.columnIndex === columnId)
-                .map(card => {
-                  return (
-                    <Card
-                      key={card.id}
-                      card={card}
-                      cardId={card.id}
-                      columnIndex={card.columnIndex}
-                      updateCardCounter={this.updateCardCounter}
-                    />
-                  );
-                })}
-            </div>
+      return (
+        <div
+          className="column"
+          onDragOver={e => this.onDragOver(e, columnId)}
+          onDragLeave={e => this.onDragLeave(e)}
+          onDrop={e => this.onDrop(e, columnId)}
+          style={{ backgroundColor, overflowY }}
+        >
+          <div id="head">
+            <div id="title">{column.name}&emsp;&emsp; <span id="quantity">{column.quantityOfCards}</span></div>
           </div>
-        );
-      } else {
-        return (
-          <div
-            className="column"
-            onDragOver={e => this.onDragOver(e, columnId)}
-            onDragLeave={e => this.onDragLeave(e)}
-            onDrop={e => this.onDrop(e, columnId)}
-            style={{ backgroundColor, overflowY }}
-          >
-            <div id="head">
-              <div id="title">{column.name}&emsp;&emsp; <span id="quantity">{column.quantityOfCards}</span></div>
-            </div>
-            <div id="body">
-              <hr />
-              {cards.filter(card => card.customerName === filterNames && card.columnIndex === columnId)
-                .map(card => {
-                  return (
-                    <Card
-                      key={card.id}
-                      card={card}
-                      cardId={card.id}
-                      columnIndex={card.columnIndex}
-                      updateCardCounter={this.updateCardCounter}
-                    />
-                  );
-                })}
-            </div>
+          <div id="body">
+            <hr />
+            {filteredCardsList.filter(card => card.columnIndex === columnId)
+              .map(card => {
+                return (
+                  <Card
+                    key={card.id}
+                    card={card}
+                    cardId={card.id}
+                    columnIndex={card.columnIndex}
+                    updateCardCounter={this.updateCardCounter}
+                  />
+                );
+              })}
           </div>
-        );
-      }
+        </div>
+      );
     }
-
     else {
       const backgroundColor = this.state.isOver ? "#dce4ef" : "";
       return (

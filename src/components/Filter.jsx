@@ -27,7 +27,7 @@ class Filter extends Component {
         return (
             <div id="dropdown">
                 <select id="select" onChange={this.handleChange}>
-                    <option value="Show all">Visa alla</option>
+                    <option value="">Visa alla</option>
                     {distinctNames
                         .map(name => {
                             return (

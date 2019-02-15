@@ -14,12 +14,12 @@ class Board extends Component {
       columns: columnList,
       cards: cardsList,
       distinctNames: [],
-      selectedFilterValue: "Show all",
+      filterValue: "",
       searchValue: ""
     }
     this.handleFilter = this.handleFilter.bind(this)
-    this.cardCounter = this.cardCounter.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
+    this.cardCounter = this.cardCounter.bind(this)
   }
 
   componentDidMount() {
@@ -36,20 +36,24 @@ class Board extends Component {
     })
   }
 
-  handleFilter(names) {
+  handleFilter(value) {
     this.setState({
-      selectedFilterValue: names
+      filterValue: value
     })
-    this.cardCounter(names)
+    this.cardCounter(value, undefined)
   }
 
   handleSearch(value) {
     this.setState({
       searchValue: value
     })
+    this.cardCounter(undefined, value)
   }
 
-  cardCounter(filterNames) {
+  cardCounter(filterVal, searchVal) {
+    if (filterVal === "") filterVal = undefined
+    if (searchVal === "") searchVal = undefined
+
     const { cards, columns } = this.state;
     let updatedColumns = [];
 
@@ -57,7 +61,7 @@ class Board extends Component {
       col.quantityOfCards = 0
     });
 
-    if (filterNames === undefined || filterNames === "Show all") {
+    if (filterVal === undefined && searchVal === undefined) {
       for (var i = 0; i < cards.length; i++) {
         updatedColumns = columns.filter(col => {
           if (col.id === cards[i].columnIndex) {
@@ -68,13 +72,33 @@ class Board extends Component {
       }
     }
     else {
-      for (var y = 0; y < cards.length; y++) {
-        updatedColumns = columns.filter(col => {
-          if (col.id === cards[y].columnIndex && cards[y].customerName === filterNames) {
-            col.quantityOfCards += 1;
+      if (filterVal !== undefined) {
+        for (var y = 0; y < cards.length; y++) {
+          updatedColumns = columns.filter(col => {
+            if (col.id === cards[y].columnIndex && cards[y].customerName === filterVal) {
+              col.quantityOfCards += 1;
+            }
+            return updatedColumns;
+          });
+        }
+      }
+      else {
+        this.state.cards.filter(card => {
+          const custName = card.customerName.toLowerCase();
+          const content = card.content.toLowerCase();
+          const owner = card.owner.toLowerCase();
+          const filter = searchVal.toLowerCase();
+
+          if (custName.includes(filter) || content.includes(filter) || owner.includes(filter)) {
+
+            updatedColumns = columns.filter(col => {
+              if (card.columnIndex === col.id) {
+                col.quantityOfCards += 1;
+              }
+              return updatedColumns
+            })
           }
-          return updatedColumns;
-        });
+        })
       }
     }
     this.setState({
@@ -83,7 +107,7 @@ class Board extends Component {
   }
 
   render() {
-    const { columns, distinctNames, selectedFilterValue } = this.state;
+    const { columns, distinctNames, filterValue } = this.state;
     return (
       <div className="board">
         <div id="top">
@@ -100,7 +124,7 @@ class Board extends Component {
               .filter(column => column.id >= columns.length - 2)
               .map(column => {
                 return (
-                  <Column column={column} columnId={column.id} key={column.id} filterNames={selectedFilterValue} cardCounter={this.cardCounter} />
+                  <Column column={column} columnId={column.id} key={column.id} filterNames={filterValue} cardCounter={this.cardCounter} />
                 )
               }
               )}
@@ -116,7 +140,7 @@ class Board extends Component {
                 key={column.id}
                 cardCounter={this.cardCounter}
                 quantityOfCards={column.quantityOfCards}
-                filterNames={selectedFilterValue}
+                filterValue={filterValue}
                 searchValue={this.state.searchValue} />
             )
           }
