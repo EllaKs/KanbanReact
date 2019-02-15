@@ -87,10 +87,11 @@ class Board extends Component {
           const custName = card.customerName.toLowerCase();
           const content = card.content.toLowerCase();
           const owner = card.owner.toLowerCase();
+          const cardId = card.id.toString();
           const filter = searchVal.toLowerCase();
 
-          if (custName.includes(filter) || content.includes(filter) || owner.includes(filter)) {
 
+          if (custName.includes(filter) || content.includes(filter) || owner.includes(filter) || cardId.includes(filter)) {
             updatedColumns = columns.filter(col => {
               if (card.columnIndex === col.id) {
                 col.quantityOfCards += 1;

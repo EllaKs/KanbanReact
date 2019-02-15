@@ -6,7 +6,7 @@
     flex-grow: 1;
     margin: 0.7rem;
     max-width: 100%;
-    min-width: 15rem;
+    min-width: 250px;
     max-height: 800px;
     padding: 5px;
     overflow-y: hidden;
@@ -27,7 +27,7 @@
     font-weight: 500;
     display: -webkit-inline-flex;
   }
-  
+
   #quantity{
     height: 25px;
     width: 30px;

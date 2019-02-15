@@ -3,26 +3,25 @@
     background-color: var(--main--color);
     display: flex;
     height: 75px;
-    
     h1 {
       font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
        margin: 10px;
        font-size: 3rem;
-       padding: 0 4rem 0 3rem;
        color: var(--main-title-color);
      }
   
      #filter{
-      padding: 15px 7rem;
+      padding: 15px;
       }
 
       #search{
-        padding: 10px 10px 0;
+        padding: 10px 0 0;
         margin: 5px;
         }
   
       #top-columns{
-        padding: 0 7rem;
+        padding: 0;
+        
       }
   }
 
